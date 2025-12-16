@@ -45,6 +45,7 @@
 ****************************************************************************/
 
 #include "pixelwidget.h"
+#include "image.hpp"
 
 #include <qapplication.h>
 #include <qapplication.h>
@@ -61,6 +62,7 @@
 
 PixelWidget::PixelWidget(QWidget *parent)
     : QWidget(parent)
+    , m_image(nullptr)
 {
     setWindowTitle(QLatin1String("PixelTool"));
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -82,6 +84,7 @@ PixelWidget::PixelWidget(QWidget *parent)
 
 PixelWidget::~PixelWidget()
 {
+    m_image = nullptr;
 }
 
 void PixelWidget::setSurface(const QImage &image)
@@ -89,6 +92,11 @@ void PixelWidget::setSurface(const QImage &image)
     m_surface = image;
     updateGeometry();
     update();
+}
+
+void PixelWidget::setImagePtr(image::Image* image)
+{
+    m_image = image;
 }
 
 void PixelWidget::timerEvent(QTimerEvent *event)
@@ -305,6 +313,8 @@ void PixelWidget::contextMenuEvent(QContextMenuEvent *e)
     copy.setShortcut(QKeySequence(QLatin1String("Ctrl+C")));
     connect(&copy, SIGNAL(triggered()), this, SLOT(copyToClipboard()));
 #endif
+    QAction savePixelTxt(QLatin1String("Save as pixel txt file"), &menu);
+    connect(&savePixelTxt, SIGNAL(triggered()), this, SLOT(savePixelToTxtFile()));
 
     menu.addAction(&title);
     menu.addSeparator();
@@ -322,6 +332,7 @@ void PixelWidget::contextMenuEvent(QContextMenuEvent *e)
 #ifndef QT_NO_CLIPBOARD
     menu.addAction(&copy);
 #endif
+    menu.addAction(&savePixelTxt);
 
     menu.exec(mapToGlobal(e->pos()));
 
@@ -403,7 +414,100 @@ void PixelWidget::saveToFile()
     }
 }
 
+void PixelWidget::savePixelToTxtFile()
+{
+    QString name = QFileDialog::getSaveFileName(this, QLatin1String("Save as pixel txt file"), QString(), QLatin1String("*.txt"));
+    if (!name.isEmpty()) {
+        if (!name.endsWith(QLatin1String(".txt")))
+            name.append(QLatin1String(".txt"));
+        //m_surface.save(name, "PNG");
+        QString imgstr =  imageToPixelTxt(m_image);
+        QFile file;
+        file.setFileName(name);
+        if (file.open(QIODevice::WriteOnly| QIODevice::Text))
+        {
+            QTextStream stream(&file);
+            stream << imgstr << "\n";
+            file.close();
+        }
+    }
+}
+
 QColor PixelWidget::colorAtCurrentPosition() const
 {
     return m_currentColor;
 }
+
+QString PixelWidget::imageToPixelTxt(image::Image* img)
+{
+    QString retString;
+    if (img==nullptr)
+    {
+        return retString;
+    }
+    
+    retString += QString::fromLatin1("ChannelType:");
+    switch (img->channelType)
+    {
+    case image::ChannelType::TYPE_FLOAT:
+        retString += QString::fromLatin1("Float");
+        break;
+    case image::ChannelType::TYPE_UNORM8:
+        retString += QString::fromLatin1("UNORM8");
+        break;
+    default:
+        retString += QString::fromLatin1("Unknown");
+        break;
+    }
+    retString += QString::fromLatin1(" width:");
+    retString += std::to_string(img->width).c_str();
+    retString += QString::fromLatin1(" height:");
+    retString += std::to_string(img->height).c_str();
+    retString += QString::fromLatin1(" channels:");
+    retString += std::to_string(img->channels).c_str();
+    retString += QString::fromLatin1(" bytesPerChannel:");
+    retString += std::to_string(img->bytesPerChannel).c_str();
+    retString += QString::fromLatin1(" bytesPerPixel:");
+    retString += std::to_string(img->bytesPerPixel).c_str();
+    retString += "\n";
+    retString += img->label.c_str();
+    retString += "\n";
+
+    for (int y = 0; y < img->width; y++)
+    {
+        for (int x = 0; x < img->width; x++)
+        {
+            retString += imagePixelToPixelTxt(img, x, y);
+        }
+        retString += "\n";
+    }
+    
+    
+    return retString;
+}
+
+QString PixelWidget::imagePixelToPixelTxt(image::Image* img, int x, int y)
+{
+    QString pixelLabel;
+    unsigned char* pixelLocation = 0;
+    float* pixel;
+
+    if (x < 0 || y < 0 || x >= img->width || y >= img->height) {
+        return QString::fromLatin1("(Out of bounds)");
+    }
+
+    pixelLocation = img->pixels + img->stride() * y;
+    pixelLocation += x * img->bytesPerPixel;
+    pixel = ((float*)pixelLocation);
+
+    pixelLabel += QLatin1String("[");
+    pixelLabel += QString::fromLatin1("%1").arg((double)pixel[0], 0, 'g', 9);
+
+    for (int channel = 1; channel < img->channels; ++channel) {
+        pixelLabel += QString::fromLatin1(", %1").arg((double)pixel[channel], 0, 'g', 9);
+    }
+    pixelLabel += QLatin1String("],");
+
+    return pixelLabel;
+}
+

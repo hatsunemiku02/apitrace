@@ -49,6 +49,10 @@
 #include <qwidget.h>
 #include <qpixmap.h>
 
+namespace image {
+    class Image;
+}
+
 class PixelWidget : public QWidget
 {
     Q_OBJECT
@@ -57,6 +61,9 @@ public:
     ~PixelWidget();
     
     void setSurface(const QImage &image);
+
+
+    void setImagePtr(image::Image* image);
 
     QColor colorAtCurrentPosition() const;
 
@@ -86,12 +93,19 @@ public slots:
     void toggleGrid();
     void copyToClipboard();
     void saveToFile();
+    void savePixelToTxtFile();
     void increaseGridSize() { setGridSize(m_gridSize + 1); }
     void decreaseGridSize() { setGridSize(m_gridSize - 1); }
 
 private:
     void startGridSizeVisibleTimer();
     double zoomValue() const { return m_zoom; }
+    
+
+    QString imageToPixelTxt(image::Image* img);
+
+    QString imagePixelToPixelTxt(image::Image* img, int x, int y);
+
 
     bool m_displayGridSize;
     bool m_mouseDown;
@@ -109,4 +123,6 @@ private:
 
     QSize m_initialSize;
     QColor m_currentColor;
+
+    image::Image* m_image;
 };

@@ -114,6 +114,7 @@ void ImageViewer::slotUpdate()
     }
 
     m_pixelWidget->setSurface(m_convertedImage);
+    m_pixelWidget->setImagePtr(m_image);
 
     updateGeometry();
 }
