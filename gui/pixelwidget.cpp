@@ -316,6 +316,9 @@ void PixelWidget::contextMenuEvent(QContextMenuEvent *e)
     QAction savePixelTxt(QLatin1String("Save as pixel txt file"), &menu);
     connect(&savePixelTxt, SIGNAL(triggered()), this, SLOT(savePixelToTxtFile()));
 
+    QAction saveAsRawFile(QLatin1String("Save as raw file"), &menu);
+    connect(&saveAsRawFile, SIGNAL(triggered()), this, SLOT(saveRawFile()));
+
     menu.addAction(&title);
     menu.addSeparator();
     menu.addAction(&whiteGrid);
@@ -333,6 +336,7 @@ void PixelWidget::contextMenuEvent(QContextMenuEvent *e)
     menu.addAction(&copy);
 #endif
     menu.addAction(&savePixelTxt);
+    menu.addAction(&saveAsRawFile);
 
     menu.exec(mapToGlobal(e->pos()));
 
@@ -428,6 +432,30 @@ void PixelWidget::savePixelToTxtFile()
         {
             QTextStream stream(&file);
             stream << imgstr << "\n";
+            file.close();
+        }
+    }
+}
+
+void PixelWidget::saveRawFile()
+{
+    QString name = QFileDialog::getSaveFileName(this, QLatin1String("Save as raw file"), QString(), QLatin1String("*.raw"));
+    if (!name.isEmpty()) {
+        if (!name.endsWith(QLatin1String(".raw")))
+            name.append(QLatin1String(".raw"));
+        QString imgstr = imageToPixelTxt(m_image);
+        QFile file;
+        file.setFileName(name);
+        if (file.open(QIODevice::WriteOnly| QIODevice::Truncate))
+        {
+            const unsigned char* row;
+            for (row = m_image->start(); row != m_image->end(); row += m_image->stride()) {
+                //os.write((const char*)row, width * bytesPerPixel);
+                unsigned datasize = m_image->width * m_image->bytesPerPixel;
+                qint64 bytesWritten = file.write(reinterpret_cast<const char*>(row), datasize);
+                assert(bytesWritten == datasize);
+            }
+          
             file.close();
         }
     }

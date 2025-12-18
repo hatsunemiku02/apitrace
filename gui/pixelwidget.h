@@ -94,6 +94,7 @@ public slots:
     void copyToClipboard();
     void saveToFile();
     void savePixelToTxtFile();
+    void saveRawFile();
     void increaseGridSize() { setGridSize(m_gridSize + 1); }
     void decreaseGridSize() { setGridSize(m_gridSize - 1); }
 
