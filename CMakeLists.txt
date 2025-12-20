@@ -602,7 +602,7 @@ add_subdirectory (helpers)
 add_subdirectory (wrappers)
 add_subdirectory (retrace)
 add_subdirectory (frametrim)
-
+add_subdirectory (wrappers/optimtool)
 
 ##############################################################################
 # CLI

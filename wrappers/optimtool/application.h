@@ -10,6 +10,7 @@ public:
     static Application& GetInstance();
 
     Context* CreateContext(void* handle);
+
     void SetCurrentContext(void* handle);
     Context* GetConotext(void* handle);
     Context* GetCurrentContext();

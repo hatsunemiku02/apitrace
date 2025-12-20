@@ -25,8 +25,9 @@ Application& Application::GetInstance()
 
 Context* Application::CreateContext(void* handle)
 {
-    Context* pCtx = new Context();
+    Context* pCtx = new Context(handle);
     m_HandleContextMap.insert(std::make_pair(handle, pCtx));
+    return pCtx;
 }
 
 void Application::SetCurrentContext(void* handle)

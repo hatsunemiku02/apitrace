@@ -136,6 +136,8 @@ traceProgram(trace::API api,
     case trace::API_D2D1:
         wrapperFilename = "d2d1trace.dll";
         useInject = true;
+    case trace::API_GL_OPTIM:
+        wrapperFilename = "opengl32_optim.dll";
         break;
 #endif
     default:
@@ -421,7 +423,10 @@ command(int argc, char *argv[])
             } else if (strcmp(optarg, "d2d") == 0 ||
                        strcmp(optarg, "d2d1") == 0) {
                 api = trace::API_D2D1;
-            } else {
+            }else if (strcmp(optarg, "gloptim") == 0){
+                api = trace::API_GL_OPTIM;
+            }
+            else {
                 std::cerr << "error: unknown API `" << optarg << "`\n";
                 usage();
                 return 1;

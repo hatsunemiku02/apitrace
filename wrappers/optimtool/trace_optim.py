@@ -20,6 +20,7 @@ class Tracer_Optim(Tracer):
                     self.serializeArg(function, arg)
             print('    trace::localWriter.endEnter();')
         #self.invokeFunction(function)
+        self.invokeFunction(function)
         if not function.internal:
             print('    trace::localWriter.beginLeave(_call);')
             print('    if (%s) {' % self.wasFunctionSuccessful(function))

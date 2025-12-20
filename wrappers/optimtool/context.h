@@ -8,39 +8,39 @@ struct EnableState
     {
 
     }
-    bool GL_BLEND; 
-    bool GL_CULL_FACE; 
+    bool BLEND; 
+    bool CULL_FACE; 
 
-    bool GL_DEPTH_TEST;
-    bool GL_SCISSOR_TEST; 
-    bool GL_STENCIL_TEST;  
+    bool DEPTH_TEST;
+    bool SCISSOR_TEST; 
+    bool STENCIL_TEST;  
 
-    bool GL_CLIP_DISTANCE ; 
-    bool GL_COLOR_LOGIC_OP; 
-    bool GL_DEBUG_OUTPUT; 
-    bool GL_DEBUG_OUTPUT_SYNCHRONOUS; 
-    bool GL_DEPTH_CLAMP; 
+    bool CLIP_DISTANCE ; 
+    bool COLOR_LOGIC_OP; 
+    bool DEBUG_OUTPUT; 
+    bool DEBUG_OUTPUT_SYNCHRONOUS; 
+    bool DEPTH_CLAMP; 
     
-    bool GL_DITHER; 
-    bool GL_FRAMEBUFFER_SRGB; 
-    bool GL_LINE_SMOOTH; 
-    bool GL_MULTISAMPLE ; 
-    bool GL_POLYGON_OFFSET_FILL; 
-    bool GL_POLYGON_OFFSET_LINE; 
-    bool GL_POLYGON_OFFSET_POINT; 
-    bool GL_POLYGON_SMOOTH; 
+    bool DITHER; 
+    bool FRAMEBUFFER_SRGB; 
+    bool LINE_SMOOTH; 
+    bool MULTISAMPLE ; 
+    bool POLYGON_OFFSET_FILL; 
+    bool POLYGON_OFFSET_LINE; 
+    bool POLYGON_OFFSET_POINT; 
+    bool POLYGON_SMOOTH; 
 
-    bool GL_PRIMITIVE_RESTART; 
-    bool GL_PRIMITIVE_RESTART_FIXED_INDEX; 
-    bool GL_RASTERIZER_DISCARD; 
-    bool GL_SAMPLE_ALPHA_TO_COVERAGE ; 
-    bool GL_SAMPLE_ALPHA_TO_ONE; 
-    bool GL_SAMPLE_COVERAGE; 
-    bool GL_SAMPLE_SHADING; 
-    bool GL_SAMPLE_MASK;
+    bool PRIMITIVE_RESTART; 
+    bool PRIMITIVE_RESTART_FIXED_INDEX; 
+    bool RASTERIZER_DISCARD; 
+    bool SAMPLE_ALPHA_TO_COVERAGE ; 
+    bool SAMPLE_ALPHA_TO_ONE; 
+    bool SAMPLE_COVERAGE; 
+    bool SAMPLE_SHADING; 
+    bool SAMPLE_MASK;
 
-    bool GL_TEXTURE_CUBE_MAP_SEAMLESS; 
-    bool GL_PROGRAM_POINT_SIZE ; 
+    bool TEXTURE_CUBE_MAP_SEAMLESS; 
+    bool PROGRAM_POINT_SIZE ; 
 };
 
 struct BlendMode
@@ -67,6 +67,11 @@ public: \
         m_##variable_name = value; \
         return 0; \
     }
+
+
+
+#define INIT_VAR(variable_name,val) \
+    ,m_##variable_name(val)
 
 class Context
 {
