@@ -41,4 +41,6 @@ findScript(const char *name, bool verbose = false);
 os::String
 findWrapper(const char *wrapperFilename, bool verbose = false);
 
+os::String
+findWrapperOptim(const char* wrapperFilename, bool verbose = false);
 

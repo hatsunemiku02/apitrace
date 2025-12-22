@@ -2,9 +2,9 @@
 
 Context::Context()
     :m_Handle(nullptr)
-    INIT_VAR(ProgramUse)
-    INIT_VAR(VertexArrayBind)
-    INIT_VAR(FrameBufferBind)
+    INIT_VAR(UseProgram,0)
+    INIT_VAR(BindVertexArray,0)
+    INIT_VAR(BindFrameBuffer,0)
 {
 }
 

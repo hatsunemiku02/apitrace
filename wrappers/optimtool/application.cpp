@@ -25,6 +25,7 @@ Application& Application::GetInstance()
 
 Context* Application::CreateContext(void* handle)
 {
+    //printf("Application::CreateContext\n");
     Context* pCtx = new Context(handle);
     m_HandleContextMap.insert(std::make_pair(handle, pCtx));
     return pCtx;
@@ -32,11 +33,17 @@ Context* Application::CreateContext(void* handle)
 
 void Application::SetCurrentContext(void* handle)
 {
+    //printf("Application::SetCurrentContext\n");
     m_pCurrentContextHandle = handle;
 }
 
 Context* Application::GetConotext(void* handle)
 {
+    //printf("Application::GetConotext\n");
+    if (m_HandleContextMap.find(handle)==m_HandleContextMap.end())
+    {
+        printf("Application::GetConotext failed. context not found.\n");
+    }
     return m_HandleContextMap[handle];
 }
 

@@ -110,6 +110,7 @@ traceProgram(trace::API api,
      */
 
     bool useInject = false;
+    bool useOptim = false;
     switch (api) {
     case trace::API_GL:
         wrapperFilename = GL_TRACE_WRAPPER;
@@ -137,15 +138,25 @@ traceProgram(trace::API api,
         wrapperFilename = "d2d1trace.dll";
         useInject = true;
     case trace::API_GL_OPTIM:
-        wrapperFilename = "opengl32_optim.dll";
+        wrapperFilename = GL_TRACE_WRAPPER;     
+        useOptim = true;
         break;
 #endif
     default:
         std::cerr << "error: unsupported API\n";
         return 1;
     }
-
-    os::String wrapperPath = findWrapper(wrapperFilename, verbose);
+        
+    os::String wrapperPath;
+    if (useOptim)
+    {
+        wrapperPath = findWrapperOptim(wrapperFilename, verbose);
+    }
+    else
+    {
+        wrapperPath = findWrapper(wrapperFilename, verbose);
+    }
+   
     if (!wrapperPath.length()) {
         std::cerr << "error: failed to find " << wrapperFilename << " wrapper (rerun with -v option for more details)\n";
         goto exit;

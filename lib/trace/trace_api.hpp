@@ -62,7 +62,8 @@ const char* const API_NAMES[API_MAX] = {
     "Direct3D 8",
     "Direct3D 9",
     "Direct3D 10.x/11.x",
-    "Direct2D"
+    "Direct2D",
+    "OpenGL_OPTIM"
 };
 
 

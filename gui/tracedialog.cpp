@@ -10,6 +10,7 @@ TraceDialog::TraceDialog(QWidget *parent)
     setupUi(this);
 
     apiComboBox->addItem("GL");
+    apiComboBox->addItem("GLOPTIM");
 #ifdef Q_OS_WIN
     apiComboBox->addItem("D3D7");
     apiComboBox->addItem("D3D8");

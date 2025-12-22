@@ -35,6 +35,10 @@ void TraceProcess::setExecutablePathAndWorkingDir(const QString &execPath, const
     QString baseName = fi.baseName();
 
     QString format = QString::fromLatin1("%1.trace");
+    if (m_api.contains("optim"))
+    {
+        format = QString::fromLatin1("%1.optim.trace");
+    }
 
     QDir traceFileDir(workingDir);
     m_tracePath = traceFileDir.filePath(format
@@ -43,6 +47,10 @@ void TraceProcess::setExecutablePathAndWorkingDir(const QString &execPath, const
     int i = 1;
     while (QFile::exists(m_tracePath)) {
         format = QString::fromLatin1("%1.%2.trace");
+        if (m_api.contains("optim"))
+        {
+            format = QString::fromLatin1("%1.%2.optim.trace");
+        }
         m_tracePath = traceFileDir.filePath(
                     format.arg(baseName)
                     .arg(i++));

@@ -80,9 +80,9 @@ public:
     Context(void* pHandle);
     ~Context();
 
-    GENERATE_GET_SET(unsigned, ProgramUse)
-    GENERATE_GET_SET(unsigned, VertexArrayBind)
-    GENERATE_GET_SET(unsigned, FrameBufferBind)
+    GENERATE_GET_SET(unsigned, UseProgram)
+    GENERATE_GET_SET(unsigned, BindVertexArray)
+    GENERATE_GET_SET(unsigned, BindFrameBuffer)
 
 private:
     EnableState m_EnableState;

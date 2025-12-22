@@ -151,6 +151,68 @@ findWrapper(const char *wrapperFilename, bool verbose)
     return "";
 }
 
+os::String findWrapperOptim(const char* wrapperFilename, bool verbose /*= false*/)
+{
+    os::String wrapperPath;
+
+    os::String processDir = os::getProcessName();
+    processDir.trimFilename();
+
+    // Try relative build directory
+    // XXX: Just make build and install directory layout match
+    wrapperPath = processDir;
+#if defined(CMAKE_INTDIR)
+    // Go from `Debug\apitrace.exe` to `wrappers\Debug\foo.dll` on MSVC builds.
+    wrapperPath.join("..");
+    wrapperPath.join("wrappers");
+    wrapperPath.join("optimtool");
+    wrapperPath.join(CMAKE_INTDIR);
+#else
+    wrapperPath.join("optimtool");
+#endif
+    wrapperPath.join(wrapperFilename);
+    if (tryPath(wrapperPath, verbose)) {
+        return wrapperPath;
+    }
+
+#ifdef __GLIBC__
+    // We want to take advantage of $LIB dynamic string token expansion in
+    // glibc dynamic linker to handle multilib layout for us
+    wrapperPath = processDir;
+    wrapperPath.join("../$LIB/apitrace/wrappers/optimtool");
+    wrapperPath.join(wrapperFilename);
+    if (tryLib(wrapperPath, verbose)) {
+        return wrapperPath;
+    }
+#endif
+
+    // Try relative install directory
+    wrapperPath = processDir;
+#if defined(_WIN32)
+    wrapperPath.join("..\\lib\\wrappers\\optimtool");
+#elif defined(__APPLE__)
+    wrapperPath.join("../lib/wrappers/optimtool");
+#else
+    wrapperPath.join("../lib/apitrace/wrappers/optimtool");
+#endif
+    wrapperPath.join(wrapperFilename);
+    if (tryPath(wrapperPath, verbose)) {
+        return wrapperPath;
+    }
+
+#ifndef _WIN32
+    // Try absolute install directory
+    wrapperPath = APITRACE_WRAPPERS_INSTALL_DIR;
+    wrapperPath.join("optimtool");
+    wrapperPath.join(wrapperFilename);
+    if (tryPath(wrapperPath, verbose)) {
+        return wrapperPath;
+    }
+#endif
+
+    return "";
+}
+
 os::String
 findScript(const char *scriptFilename, bool verbose)
 {
