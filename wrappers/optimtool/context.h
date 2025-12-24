@@ -1,77 +1,14 @@
 #pragma once
 
+#include <vector>
 #include <map>
-
-struct EnableState
-{
-    EnableState()
-    {
-
-    }
-    bool BLEND; 
-    bool CULL_FACE; 
-
-    bool DEPTH_TEST;
-    bool SCISSOR_TEST; 
-    bool STENCIL_TEST;  
-
-    bool CLIP_DISTANCE ; 
-    bool COLOR_LOGIC_OP; 
-    bool DEBUG_OUTPUT; 
-    bool DEBUG_OUTPUT_SYNCHRONOUS; 
-    bool DEPTH_CLAMP; 
-    
-    bool DITHER; 
-    bool FRAMEBUFFER_SRGB; 
-    bool LINE_SMOOTH; 
-    bool MULTISAMPLE ; 
-    bool POLYGON_OFFSET_FILL; 
-    bool POLYGON_OFFSET_LINE; 
-    bool POLYGON_OFFSET_POINT; 
-    bool POLYGON_SMOOTH; 
-
-    bool PRIMITIVE_RESTART; 
-    bool PRIMITIVE_RESTART_FIXED_INDEX; 
-    bool RASTERIZER_DISCARD; 
-    bool SAMPLE_ALPHA_TO_COVERAGE ; 
-    bool SAMPLE_ALPHA_TO_ONE; 
-    bool SAMPLE_COVERAGE; 
-    bool SAMPLE_SHADING; 
-    bool SAMPLE_MASK;
-
-    bool TEXTURE_CUBE_MAP_SEAMLESS; 
-    bool PROGRAM_POINT_SIZE ; 
-};
-
-struct BlendMode
-{
-    int m_srcMode;
-    int m_dstMode;
-    int m_srcAlphaMode;
-    int m_dstAlphaMode;
-};
+#include <assert.h>
+#include "predef.h"
+#include "shaderparam.h"
 
 
-#define GENERATE_GET_SET(variable_type, variable_name) \
-private: \
-    variable_type m_##variable_name; \
-public: \
-    inline variable_type get##variable_name() const { \
-        return m_##variable_name; \
-    } \
-    inline unsigned set##variable_name(variable_type value) { \
-        if(m_##variable_name == value) \
-        { \
-            return 1; \
-        } \
-        m_##variable_name = value; \
-        return 0; \
-    }
-
-
-
-#define INIT_VAR(variable_name,val) \
-    ,m_##variable_name(val)
+class State;
+class PipeLine;
 
 class Context
 {
@@ -80,13 +17,47 @@ public:
     Context(void* pHandle);
     ~Context();
 
+    void BeginFrame();
+    void BeginPipeLine();
+    void AddDrawCall(GLenum drawmode, GLenum elementType, unsigned startvbo, unsigned startebo, unsigned drawcount, unsigned instancecount);
+    void EndPipeLine();
+    void SetEnable(GLenum state);
+    void SetDisable(GLenum state);
+
+    int SetProgramUniform(unsigned pg, unsigned locate, void* value, unsigned datalength, ParamType overrideType = ParamType::UNKNOWN);
+    int SetProgramUniform(unsigned locate, void* value, unsigned datalength, ParamType overrideType = ParamType::UNKNOWN);
+    
+    void SetActiveTexUnit(GLenum texUnit)
+    {
+        int m_ActiveTextureUnit = texUnit - GL_TEXTURE0;
+        assert(m_ActiveTextureUnit >= 0);
+    }
+
+    void BindTexToTexUnit(GLenum texUnit, unsigned texID)
+    {
+        m_TexUnitIDMap[texUnit] = texID;
+    }
+
+    void BindTex( unsigned texID)
+    {
+        m_TexUnitIDMap[m_ActiveTextureUnit] = texID;
+    }
+
+public:
+
     GENERATE_GET_SET(unsigned, UseProgram)
     GENERATE_GET_SET(unsigned, BindVertexArray)
     GENERATE_GET_SET(unsigned, BindFrameBuffer)
 
 private:
-    EnableState m_EnableState;
-    BlendMode m_BlendMode;
-    std::map<unsigned, unsigned> m_ShaderSlotBufferMap;
+    void gernateState();
+    
+private:
     void* m_Handle;
+    EnableState m_EnableState;
+    BlendMode m_BlendMode;    
+
+    int m_ActiveTextureUnit;
+    std::map<int, unsigned> m_TexUnitIDMap;
+    std::vector<PipeLine*> m_PipelinesThisFrame;
 };

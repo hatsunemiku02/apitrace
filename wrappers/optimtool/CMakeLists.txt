@@ -37,6 +37,16 @@ if (WIN32)
         application.h
         context.cpp
         context.h
+ 	drawcall.cpp
+        drawcall.h
+	pipeline.cpp
+        pipeline.h
+	state.cpp
+        state.h
+        predef.cpp
+ 	predef.h
+        shaderparam.h
+        shaderparam.cpp
         log.cpp
         log.h
         ${CMAKE_SOURCE_DIR}/wrappers/glproc_gl.cpp
@@ -49,7 +59,7 @@ if (WIN32)
     )
     set_target_properties (wgltrace_optim PROPERTIES
         PREFIX ""
-        OUTPUT_NAME opengl32_optim
+        OUTPUT_NAME opengl32
     )
     install (TARGETS wgltrace_optim LIBRARY DESTINATION ${WRAPPER_INSTALL_DIR})
     install_pdb (wgltrace_optim DESTINATION ${WRAPPER_INSTALL_DIR})
