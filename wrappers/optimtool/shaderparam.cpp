@@ -1,6 +1,79 @@
 #include <assert.h>
 #include "shaderparam.h"
 
+
+
+//---------------------------------------------------------------
+
+bool isEqual(const std::shared_ptr<Param>& left, const std::shared_ptr<Param>& right)
+{
+    assert(left != nullptr && right != nullptr);
+    if (left->GetParamType() != right->GetParamType())
+    {
+        return false;
+    }
+    if (left->GetParamType() == ParamType::FLOAT4)
+    {
+        std::shared_ptr <ParamFloat4> pl = std::static_pointer_cast<ParamFloat4>(left);
+        std::shared_ptr <ParamFloat4> pr = std::static_pointer_cast<ParamFloat4>(right);
+        return *pl == *pr;
+    }
+    else if (left->GetParamType() == ParamType::FLOATVEC)
+    {
+        std::shared_ptr <ParamFloatVec> pl = std::static_pointer_cast<ParamFloatVec>(left);
+        std::shared_ptr <ParamFloatVec> pr = std::static_pointer_cast<ParamFloatVec>(right);
+        return *pl == *pr;
+    }
+    else if (left->GetParamType() == ParamType::TEXTURE)
+    {
+        std::shared_ptr <ParamTexture> pl = std::static_pointer_cast<ParamTexture>(left);
+        std::shared_ptr <ParamTexture> pr = std::static_pointer_cast<ParamTexture>(right);
+        return *pl == *pr;
+    }
+    else if (left->GetParamType() == ParamType::BUFFER)
+    {
+        printf("isequal param buffer\n");
+        std::shared_ptr <ParamBuffer> pl = std::static_pointer_cast<ParamBuffer>(left);
+        std::shared_ptr <ParamBuffer> pr = std::static_pointer_cast<ParamBuffer>(right);
+        return *pl == *pr;
+    }
+    return false;
+}
+
+
+bool isLess(const std::shared_ptr<Param>& left, const std::shared_ptr<Param>& right)
+{
+    assert(left != nullptr && right != nullptr);
+    if (left->GetParamType() != right->GetParamType())
+    {
+        return left->GetParamType() < right->GetParamType();
+    }
+    if (left->GetParamType() == ParamType::FLOAT4)
+    {
+        std::shared_ptr <ParamFloat4> pl = std::static_pointer_cast<ParamFloat4>(left);
+        std::shared_ptr <ParamFloat4> pr = std::static_pointer_cast<ParamFloat4>(right);
+        return *pl < *pr;
+    }
+    else if (left->GetParamType() == ParamType::FLOATVEC)
+    {
+        std::shared_ptr <ParamFloatVec> pl = std::static_pointer_cast<ParamFloatVec>(left);
+        std::shared_ptr <ParamFloatVec> pr = std::static_pointer_cast<ParamFloatVec>(right);
+        return *pl < *pr;
+    }
+    else if (left->GetParamType() == ParamType::TEXTURE)
+    {
+        std::shared_ptr <ParamTexture> pl = std::static_pointer_cast<ParamTexture>(left);
+        std::shared_ptr <ParamTexture> pr = std::static_pointer_cast<ParamTexture>(right);
+        return *pl < *pr;
+    }
+    else if (left->GetParamType() == ParamType::BUFFER)
+    {
+        std::shared_ptr <ParamBuffer> pl = std::static_pointer_cast<ParamBuffer>(left);
+        std::shared_ptr <ParamBuffer> pr = std::static_pointer_cast<ParamBuffer>(right);
+        return *pl < *pr;
+    }
+    return false;
+}
 //---------------------------------------------------------------
 ParamType ParamFloat4::sType = ParamType::FLOAT4;
 ParamType ParamFloat4::GetParamType()
@@ -127,77 +200,7 @@ bool ParamBuffer::operator==(const ParamBuffer& other) const
     return m_BufferID == other.m_BufferID;
 }
 
-//---------------------------------------------------------------
 
-bool isEqual(const std::shared_ptr<Param>& left, const std::shared_ptr<Param>& right)
-{
-    assert(left != nullptr && right != nullptr);
-    if (left->GetParamType() != right->GetParamType())
-    {
-        return false;
-    }
-    if (left->GetParamType() == ParamType::FLOAT4)
-    {
-        std::shared_ptr <ParamFloat4> pl = std::static_pointer_cast<ParamFloat4>(left);
-        std::shared_ptr <ParamFloat4> pr = std::static_pointer_cast<ParamFloat4>(right);
-        return *pl == *pr;
-    }
-    else if (left->GetParamType() == ParamType::FLOATVEC)
-    {
-        std::shared_ptr <ParamFloatVec> pl = std::static_pointer_cast<ParamFloatVec>(left);
-        std::shared_ptr <ParamFloatVec> pr = std::static_pointer_cast<ParamFloatVec>(right);
-        return *pl == *pr;
-    }
-    else if (left->GetParamType() == ParamType::TEXTURE)
-    {
-        std::shared_ptr <ParamTexture> pl = std::static_pointer_cast<ParamTexture>(left);
-        std::shared_ptr <ParamTexture> pr = std::static_pointer_cast<ParamTexture>(right);
-        return *pl == *pr;
-    }
-    else if (left->GetParamType() == ParamType::BUFFER)
-    {
-        printf("isequal param buffer\n");
-        std::shared_ptr <ParamBuffer> pl = std::static_pointer_cast<ParamBuffer>(left);
-        std::shared_ptr <ParamBuffer> pr = std::static_pointer_cast<ParamBuffer>(right);
-        return *pl == *pr;
-    }
-    return false;
-}
-
-
-bool isLess(const std::shared_ptr<Param>& left, const std::shared_ptr<Param>& right)
-{
-    assert(left != nullptr && right != nullptr);
-    if (left->GetParamType() != right->GetParamType())
-    {
-        return left->GetParamType() < right->GetParamType();
-    }
-    if (left->GetParamType() == ParamType::FLOAT4)
-    {
-        std::shared_ptr <ParamFloat4> pl = std::static_pointer_cast<ParamFloat4>(left);
-        std::shared_ptr <ParamFloat4> pr = std::static_pointer_cast<ParamFloat4>(right);
-        return *pl < *pr;
-    }
-    else if (left->GetParamType() == ParamType::FLOATVEC)
-    {
-        std::shared_ptr <ParamFloatVec> pl = std::static_pointer_cast<ParamFloatVec>(left);
-        std::shared_ptr <ParamFloatVec> pr = std::static_pointer_cast<ParamFloatVec>(right);
-        return *pl < *pr;
-    }
-    else if (left->GetParamType() == ParamType::TEXTURE)
-    {
-        std::shared_ptr <ParamTexture> pl = std::static_pointer_cast<ParamTexture>(left);
-        std::shared_ptr <ParamTexture> pr = std::static_pointer_cast<ParamTexture>(right);
-        return *pl < *pr;
-    }
-    else if (left->GetParamType() == ParamType::BUFFER)
-    {
-        std::shared_ptr <ParamBuffer> pl = std::static_pointer_cast<ParamBuffer>(left);
-        std::shared_ptr <ParamBuffer> pr = std::static_pointer_cast<ParamBuffer>(right);
-        return *pl < *pr;
-    }
-    return false;
-}
 //---------------------------------------------------------------
 ShaderParam::ShaderParam()
 {

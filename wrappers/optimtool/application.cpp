@@ -3,6 +3,7 @@
 
 Application::Application()
 :m_pCurrentContextHandle(nullptr)
+,m_ColloectMode(false)
 {
 
 }

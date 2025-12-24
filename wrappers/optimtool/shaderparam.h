@@ -15,7 +15,7 @@ enum ParamType
 class Param
 {
 public:
-
+   
     Param()
     {
 
@@ -135,6 +135,11 @@ public:
     {
         printf("ParamBuffer::~ParamBuffer %d\n", m_BufferID);
     }
+    unsigned GetBufferID()
+    {
+        return m_BufferID;
+    }
+
     bool operator<(const ParamBuffer& other) const;
     bool operator==(const ParamBuffer& other) const;
     bool operator!=(const ParamBuffer& other) const;
@@ -143,6 +148,8 @@ private:
     unsigned m_BufferID;
 };
 
+bool isEqual(const std::shared_ptr<Param>& left, const std::shared_ptr<Param>& right);
+bool isLess(const std::shared_ptr<Param>& left, const std::shared_ptr<Param>& right);
 
 class ShaderParam
 {
@@ -157,6 +164,11 @@ public:
 
     virtual ~ShaderParam();
     int SetParam(unsigned locate,const std::shared_ptr <Param>& value);
+
+    const std::map<unsigned, std::shared_ptr<Param>>& GetSlotParamMap() const
+    {
+        return m_SlotParamMap;
+    }
     bool operator<(const ShaderParam& other) const;
     bool operator==(const ShaderParam& other) const;
     bool operator!=(const ShaderParam& other) const;

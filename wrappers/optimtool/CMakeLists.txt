@@ -47,6 +47,7 @@ if (WIN32)
  	predef.h
         shaderparam.h
         shaderparam.cpp
+        glfooheader.h
         log.cpp
         log.h
         ${CMAKE_SOURCE_DIR}/wrappers/glproc_gl.cpp
@@ -89,6 +90,17 @@ if (ENABLE_EGL AND NOT WIN32 AND NOT APPLE)
         application.h
         context.cpp
         context.h
+ 	drawcall.cpp
+        drawcall.h
+	pipeline.cpp
+        pipeline.h
+	state.cpp
+        state.h
+        predef.cpp
+ 	predef.h
+        shaderparam.h
+        shaderparam.cpp
+        glfooheader.h
         log.cpp
         log.h
         ../dlsym.cpp

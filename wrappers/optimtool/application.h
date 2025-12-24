@@ -27,9 +27,21 @@ public:
     {
         return m_ShaderParamMapCache;
     }
+
+    void SetCollectMode(bool collect)
+    {
+        m_ColloectMode = collect;
+    }
+
+    bool GetCollectMode()
+    {
+        return m_ColloectMode;
+    }
+
 private:
     Application();
     void* m_pCurrentContextHandle;
     std::map<void*,Context*> m_HandleContextMap;
     std::map<unsigned, ShaderParam> m_ShaderParamMapCache;
+    bool m_ColloectMode;// 在收集状态下，会存储所有绘制相关的API调用，等到swapbuffer，bindframebuffer，flush，finish的时候再一次性调用。
 };

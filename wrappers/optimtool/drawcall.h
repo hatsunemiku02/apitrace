@@ -19,8 +19,43 @@ public:
     {
         return m_pState ;
     }
+
     void SetDrawParam(GLenum drawmode, GLenum elementType, unsigned startvbo, unsigned startebo, unsigned drawcount, unsigned instancecount);
 
+    
+    bool operator==(const DrawCall& other) const;
+    bool operator<(const DrawCall& other) const;
+
+
+    GLenum GetDrawMode()
+    {
+        return m_DrawMode;
+    }
+
+    GLenum GetElementType()
+    {
+        return m_ElementType;
+    }
+
+    unsigned GetStartVbo()
+    {
+        return m_StartVbo;
+    }
+
+    unsigned GetStartEbo()
+    {
+        return m_StartEbo;
+    }
+
+    unsigned GetDrawCount()
+    {
+        return m_DrawCount;
+    }
+
+    unsigned GetInstanceCount()
+    {
+        return m_InstanceCount;
+    }
 private:
     State* m_pState;
 

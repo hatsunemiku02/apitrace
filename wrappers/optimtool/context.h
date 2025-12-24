@@ -60,4 +60,5 @@ private:
     int m_ActiveTextureUnit;
     std::map<int, unsigned> m_TexUnitIDMap;
     std::vector<PipeLine*> m_PipelinesThisFrame;
+    unsigned int m_FrameCount;
 };

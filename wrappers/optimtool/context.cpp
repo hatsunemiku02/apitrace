@@ -14,6 +14,7 @@ Context::Context()
     , m_ActiveTextureUnit(0)
     , m_TexUnitIDMap()
     , m_PipelinesThisFrame()
+    , m_FrameCount(0)
 {
 
 }
@@ -26,6 +27,7 @@ Context::Context(void* pHandle)
     , m_ActiveTextureUnit(0)
     , m_TexUnitIDMap()
     , m_PipelinesThisFrame()
+    , m_FrameCount(0)
 {
 
 }
@@ -93,6 +95,8 @@ void Context::AddDrawCall(GLenum drawmode, GLenum elementType, unsigned startvbo
 
 }
 
+static int startframe = 5;
+
 void Context::EndPipeLine()
 {
     printf("Context::EndPipeLine\n");
@@ -103,10 +107,26 @@ void Context::EndPipeLine()
         printf("draw call count %d\n", m_PipelinesThisFrame[m_PipelinesThisFrame.size() - 1]->GetDrawCallVec().size());
         printf("used State Count %d\n", m_PipelinesThisFrame[m_PipelinesThisFrame.size() - 1]->GetUsedStateSet().size());
     }
-   
-
-
+    if (Application::GetInstance().GetCollectMode() == true)
+    {
+        Application::GetInstance().SetCollectMode(false);
+        for (int i = 0; i < m_PipelinesThisFrame.size(); i++)
+        {
+            m_PipelinesThisFrame[i]->SortDrawCalls();
+            m_PipelinesThisFrame[i]->ApplyDrawCalls();
+        }
+        Application::GetInstance().SetCollectMode(true);
+    }
     printf("***********pipline info end************************\n");
+    if (m_FrameCount==startframe)
+    {
+        Application::GetInstance().SetCollectMode(true);
+    }
+    if (m_FrameCount<= startframe)
+    {
+        m_FrameCount++;
+    }
+   
 }
 
 int Context::SetProgramUniform(unsigned pg, unsigned locate, void* value,unsigned datalength, ParamType overrideType)

@@ -43,6 +43,11 @@ void State::SetShaderParam()
     m_ShaderParam = shaderParamCache[m_UseProgram];
 }
 
+void State::SetShaderParam(const ShaderParam& param)
+{
+    m_ShaderParam = param;
+}
+
 bool State::operator==(const State& other) const
 {
     return (m_UseProgram == other.m_UseProgram) && (m_BindVertexArray == other.m_BindVertexArray) && (m_BindFrameBuffer == other.m_BindFrameBuffer)
@@ -51,13 +56,13 @@ bool State::operator==(const State& other) const
 
 bool State::operator<(const State& other) const
 {
-    if (m_UseProgram != other.m_UseProgram) return m_UseProgram < other.m_UseProgram;
-    if (m_BindVertexArray != other.m_BindVertexArray) return m_BindVertexArray < other.m_BindVertexArray;
+
     if (m_BindFrameBuffer != other.m_BindFrameBuffer) return m_BindFrameBuffer < other.m_BindFrameBuffer;
-    
     if (m_EnableState != other.m_EnableState) return m_EnableState < other.m_EnableState;
     if (m_BlendMode != other.m_BlendMode) return m_BlendMode < other.m_BlendMode;
+    if (m_UseProgram != other.m_UseProgram) return m_UseProgram < other.m_UseProgram;
     if (m_ShaderParam != other.m_ShaderParam) return m_ShaderParam < other.m_ShaderParam;
+    if (m_BindVertexArray != other.m_BindVertexArray) return m_BindVertexArray < other.m_BindVertexArray;
     
     return false;
 }
