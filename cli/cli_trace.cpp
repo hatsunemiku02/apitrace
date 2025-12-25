@@ -115,6 +115,10 @@ traceProgram(trace::API api,
     case trace::API_GL:
         wrapperFilename = GL_TRACE_WRAPPER;
         break;
+    case trace::API_GL_OPTIM:
+        wrapperFilename = GL_TRACE_WRAPPER;
+        useOptim = true;
+        break;
 #ifdef EGL_TRACE_WRAPPER
     case trace::API_EGL:
         wrapperFilename = EGL_TRACE_WRAPPER;
@@ -137,10 +141,6 @@ traceProgram(trace::API api,
     case trace::API_D2D1:
         wrapperFilename = "d2d1trace.dll";
         useInject = true;
-    case trace::API_GL_OPTIM:
-        wrapperFilename = GL_TRACE_WRAPPER;     
-        useOptim = true;
-        break;
 #endif
     default:
         std::cerr << "error: unsupported API\n";
