@@ -324,6 +324,6 @@ private:
 void ProfileTableModel::sort(int column, Qt::SortOrder order) {
     m_sortColumn = column;
     m_sortOrder = order;
-    std::sort(m_rowData.begin(), m_rowData.end(), ProgramSorter(column, order));
+    //std::sort(m_rowData.begin(), m_rowData.end(), ProgramSorter(column, order));
     emit dataChanged(createIndex(0, 0), createIndex(m_rowData.size(), MAX_COLUMN));
 }

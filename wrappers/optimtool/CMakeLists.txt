@@ -37,14 +37,14 @@ if (WIN32)
         application.h
         context.cpp
         context.h
- 	drawcall.cpp
+ 	    drawcall.cpp
         drawcall.h
-	pipeline.cpp
+	    pipeline.cpp
         pipeline.h
-	state.cpp
+	    state.cpp
         state.h
         predef.cpp
- 	predef.h
+ 	    predef.h
         shaderparam.h
         shaderparam.cpp
         glfooheader.h
@@ -64,6 +64,65 @@ if (WIN32)
     )
     install (TARGETS wgltrace_optim LIBRARY DESTINATION ${WRAPPER_INSTALL_DIR})
     install_pdb (wgltrace_optim DESTINATION ${WRAPPER_INSTALL_DIR})
+endif ()
+
+if (X11_FOUND)
+    # libGL.so
+    add_custom_command (
+        OUTPUT glxtrace_optim.cpp
+        COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/glxtrace_optim.py > ${CMAKE_CURRENT_BINARY_DIR}/glxtrace_optim.cpp
+        DEPENDS
+            glxtrace_optim.py
+            gltrace_optim.py
+            trace_optim.py
+            ${CMAKE_SOURCE_DIR}/dispatch/dispatch.py
+            ${CMAKE_SOURCE_DIR}/specs/glxapi.py
+            ${CMAKE_SOURCE_DIR}/specs/glapi.py
+            ${CMAKE_SOURCE_DIR}/specs/glparams.py
+            ${CMAKE_SOURCE_DIR}/specs/gltypes.py
+            ${CMAKE_SOURCE_DIR}/specs/stdapi.py
+    )
+
+    add_library (glxtrace_optim SHARED
+        application.cpp
+        application.h
+        context.cpp
+        context.h
+ 	    drawcall.cpp
+        drawcall.h
+	    pipeline.cpp
+        pipeline.h
+	    state.cpp
+        state.h
+        predef.cpp
+ 	    predef.h
+        shaderparam.h
+        shaderparam.cpp
+        glfooheader.h
+        log.cpp
+        log.h
+        glxtrace_optim.cpp
+        ${CMAKE_SOURCE_DIR}/wrappers/dlsym.cpp
+        ${CMAKE_SOURCE_DIR}/wrappers/glproc_gl.cpp
+    )
+
+    add_dependencies (glxtrace_optim glproc)
+
+    set_target_properties (glxtrace_optim PROPERTIES
+        # avoid the default "lib" prefix
+        PREFIX ""
+    )
+
+    target_link_libraries (glxtrace_optim
+        gltrace_common
+        glproc
+        ${CMAKE_THREAD_LIBS_INIT}
+        ${CMAKE_DL_LIBS}
+    )
+
+    target_linker_version_script (glxtrace_optim ${CMAKE_CURRENT_SOURCE_DIR}/../glxtrace.version)
+
+    install (TARGETS glxtrace_optim LIBRARY DESTINATION ${WRAPPER_INSTALL_DIR}/optimtool)
 endif ()
 
 if (ENABLE_EGL AND NOT WIN32 AND NOT APPLE)
@@ -90,14 +149,14 @@ if (ENABLE_EGL AND NOT WIN32 AND NOT APPLE)
         application.h
         context.cpp
         context.h
- 	drawcall.cpp
+ 	    drawcall.cpp
         drawcall.h
-	pipeline.cpp
+	    pipeline.cpp
         pipeline.h
-	state.cpp
+	    state.cpp
         state.h
         predef.cpp
- 	predef.h
+ 	    predef.h
         shaderparam.h
         shaderparam.cpp
         glfooheader.h

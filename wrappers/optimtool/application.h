@@ -38,10 +38,15 @@ public:
         return m_ColloectMode;
     }
 
+    bool GetDisableReadPixels()
+    {
+        return m_DisableReadPixels;
+    }
 private:
     Application();
     void* m_pCurrentContextHandle;
     std::map<void*,Context*> m_HandleContextMap;
     std::map<unsigned, ShaderParam> m_ShaderParamMapCache;
-    bool m_ColloectMode;// ÔÚÊÕ¼¯×´Ì¬ÏÂ£¬»á´æ´¢ËùÓĞ»æÖÆÏà¹ØµÄAPIµ÷ÓÃ£¬µÈµ½swapbuffer£¬bindframebuffer£¬flush£¬finishµÄÊ±ºòÔÙÒ»´ÎĞÔµ÷ÓÃ¡£
+    bool m_ColloectMode;// åœ¨æ”¶é›†çŠ¶æ€ä¸‹ï¼Œä¼šå­˜å‚¨æ‰€æœ‰ç»˜åˆ¶ç›¸å…³çš„APIè°ƒç”¨ï¼Œç­‰åˆ°swapbufferï¼Œbindframebufferï¼Œflushï¼Œfinishçš„æ—¶å€™å†ä¸€æ¬¡æ€§è°ƒç”¨ã€‚
+    bool m_DisableReadPixels;//å¼ºè¡Œå…³é—­glreadpixelså‡½æ•°ã€‚
 };

@@ -51,10 +51,13 @@
 #define GL_TRACE_WRAPPER  "OpenGL.framework/OpenGL"
 #elif defined(_WIN32)
 #define GL_TRACE_WRAPPER  "opengl32.dll"
+#define GL_TRACE_OPTIM_WRAPPER  GL_TRACE_WRAPPER
 #else
 #define TRACE_VARIABLE "LD_PRELOAD"
 #define GL_TRACE_WRAPPER  "glxtrace.so"
+#define GL_TRACE_OPTIM_WRAPPER  "glxtrace_optim.so"
 #define EGL_TRACE_WRAPPER  "egltrace.so"
+#define EGL_TRACE_OPTIM_WRAPPER  "egltrace_optim.so"
 #endif
 
 
@@ -116,7 +119,7 @@ traceProgram(trace::API api,
         wrapperFilename = GL_TRACE_WRAPPER;
         break;
     case trace::API_GL_OPTIM:
-        wrapperFilename = GL_TRACE_WRAPPER;
+        wrapperFilename = GL_TRACE_OPTIM_WRAPPER;
         useOptim = true;
         break;
 #ifdef EGL_TRACE_WRAPPER

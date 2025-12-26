@@ -1,11 +1,21 @@
 #include "application.h"
 #include "context.h"
 
+#include <unistd.h> 
+
 Application::Application()
 :m_pCurrentContextHandle(nullptr)
 ,m_ColloectMode(false)
+,m_DisableReadPixels(true)
 {
+    // 获取当前进程ID
+    pid_t pid = getpid();
+    
+    // 获取父进程ID
+    pid_t ppid = getppid();
 
+    printf("当前进程ID: %d\n", pid);
+    printf("父进程ID: %d\n", ppid);
 }
 
 Application::~Application()

@@ -168,6 +168,7 @@ os::String findWrapperOptim(const char* wrapperFilename, bool verbose /*= false*
     wrapperPath.join("optimtool");
     wrapperPath.join(CMAKE_INTDIR);
 #else
+    wrapperPath.join("wrappers");
     wrapperPath.join("optimtool");
 #endif
     wrapperPath.join(wrapperFilename);

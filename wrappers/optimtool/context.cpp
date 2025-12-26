@@ -1,8 +1,9 @@
 #include "context.h"
-#include "State.h"
+#include "state.h"
 #include "application.h"
 #include "pipeline.h"
 #include "drawcall.h"
+#include "os_time.hpp"
 #include <stdexcept>
 #include <iostream>
 
@@ -74,15 +75,9 @@ void Context::AddDrawCall(GLenum drawmode, GLenum elementType, unsigned startvbo
     printf("--Context::AddDrawCall:State::AllStates.find \n");
 
     std::set<State>::iterator itr = State::AllStates.end();
-    try {
-        itr = State::AllStates.find(drawState);
-    }
-    catch (const std::exception& e) { // ²¶»ñ±ê×¼¿âÒì³£¼°ÆäÅÉÉúÀà
-        std::cerr << "²¶»ñµ½±ê×¼Òì³£: " << e.what() << std::endl;
-    }
-    catch (...) { // ²¶»ñËùÓĞÆäËûÀàĞÍµÄÒì³££¨²»ÍÆ¼ö×÷ÎªÊ×Ñ¡£¬µ«¿É×÷Îª¶µµ×£©
-        std::cerr << "²¶»ñµ½Î´ÖªÀàĞÍµÄÒì³£" << std::endl;
-    }
+
+    itr = State::AllStates.find(drawState);
+
     
     assert(itr != State::AllStates.end());
     printf("--Context::AddDrawCall:State::AllStates.cast\n");
@@ -100,7 +95,7 @@ static int startframe = 5;
 void Context::EndPipeLine()
 {
     printf("Context::EndPipeLine\n");
-    //Ö´ĞĞÅÅĞò£¬ÏàÍ¬stateµÄdrawcall·Åµ½Ò»Æğ
+    //æ‰§è¡Œæ’åºï¼Œç›¸åŒstateçš„drawcallæ”¾åˆ°ä¸€èµ·
     printf("***********pipline info************************\n");
     if (m_PipelinesThisFrame.size()>=1)
     {
@@ -112,8 +107,18 @@ void Context::EndPipeLine()
         Application::GetInstance().SetCollectMode(false);
         for (int i = 0; i < m_PipelinesThisFrame.size(); i++)
         {
+            long long time1 = os::getTime();
             m_PipelinesThisFrame[i]->SortDrawCalls();
+            long long time2 = os::getTime();
             m_PipelinesThisFrame[i]->ApplyDrawCalls();
+            long long time3 = os::getTime();
+
+
+            long long sortTimeUsec = (time2-time1) *
+                1000 * 1000 / os::timeFrequency;
+            long long drawTimeUsec = (time3 - time2) *
+                1000 * 1000 / os::timeFrequency;
+            printf("sort time use %lld,draw time use %lld\n",sortTimeUsec,drawTimeUsec);
         }
         Application::GetInstance().SetCollectMode(true);
     }
@@ -162,7 +167,7 @@ int Context::SetProgramUniform(unsigned pg, unsigned locate, void* value,unsigne
     GLchar name[128];
     GLsizei length;
     GLint size;
-    GLenum type; // Õâ¸ö±äÁ¿½«±£´æuniformµÄÀàĞÍÃ¶¾ÙÖµ
+    GLenum type; // è¿™ä¸ªå˜é‡å°†ä¿å­˜uniformçš„ç±»å‹æšä¸¾å€¼
 
 
     printf(" Context::SetProgramUniform STEP1 \n");

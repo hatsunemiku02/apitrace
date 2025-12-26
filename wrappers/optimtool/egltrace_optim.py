@@ -119,6 +119,8 @@ if __name__ == '__main__':
     print('#include "glproc.hpp"')
     print('#include "glsize.hpp"')
     print('#include "eglsize.hpp"')
+    print('#include "application.h"')
+    print('#include "context.h"')
     print()
 
     module = Module()
